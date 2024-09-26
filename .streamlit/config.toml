@@ -1,0 +1,16 @@
+[theme]
+primaryColor = "#FF4B4B"  # Bright Red for primary elements
+backgroundColor = "#E0E3FF"  # Light Peach background for warmth
+secondaryBackgroundColor = "#FFFFFF"  # White for secondary backgrounds
+textColor = "#4A4A4A"  # Dark Gray for better contrast
+font = "sans serif"  # Clean font style
+fontSize = "16px"  # Base font size
+
+# Optionally, customize button appearance
+[theme.button]
+backgroundColor = "#FF6F61"  # Coral for button backgrounds
+borderColor = "#FF6F61"  # Same coral for button borders
+textColor = "#FFFFFF"  # White text on buttons
+
+[theme.sidebar]
+backgroundColor = "#FFE0B2"  # Light Orange for the sidebar
