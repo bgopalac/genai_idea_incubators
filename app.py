@@ -8,60 +8,13 @@ import re
 import csv
 import boto3
 import json
-import google.generativeai as genai
 import seaborn as sns
 import matplotlib.pyplot as plt
 from sdv.metadata import SingleTableMetadata
-from sdv.single_table import CTGANSynthesizer
 from sdv.single_table import GaussianCopulaSynthesizer
-from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain.prompts import PromptTemplate
-from langchain.chains import LLMChain
 from dotenv import load_dotenv
 
 load_dotenv()
-
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-
-def get_gemini_response(prompt_template):
-    model = genai.GenerativeModel("gemini-pro")
-    response = model.generate_content([prompt_template],
-                                      generation_config=genai.types.GenerationConfig(temperature=0.2))
-    return response.text
-
-
-
-def get_amazon_bedrock(prompt_template):
-    response = client.invoke_model(
-        modelId = 'amazon.titan-text-premier-v1:0',
-        #contentType = 'application/json',
-        #accept = 'application/json',
-        body = json.dumps({"inputText": prompt_template, "textGenerationConfig": {
-        "maxTokenCount": 532,
-        "temperature": 0.2,}})
-    )
-
-    result = json.loads(response['body'].read())
-    return result.get('output')
-
-def get_yes_gemini_response(template):
-    model = genai.GenerativeModel("gemini-pro")
-    response = model.generate_content([template],
-                                      generation_config=genai.types.GenerationConfig(temperature=0.2))
-    return response.text
-
-def csv_converter(text):
-    lines = text.strip().split("\n")
-    header = [h.strip().strip("*") for h in lines[0].split('|')]
-    data = []
-    for line in lines[2:]:
-        row = [cell.strip().strip("*") for cell in line.split('|')]
-        data.append(row)
-    df = pd.DataFrame(data, columns=header)
-    csv_buffer = io.StringIO()
-    df.to_csv(csv_buffer, index=False)
-    csv_data = csv_buffer.getvalue()
-    return csv_data,df
 
 def clean_response(text):
     cleaned_text = text.replace('*','').replace('|','').strip()
@@ -87,8 +40,6 @@ def convert_response_to_csv(text):
     csv_buffer = StringIO()
     df.to_csv(csv_buffer, index=False)
     return csv_buffer
-
-
 
 st.set_page_config("ESG Data and Reporting", layout="wide")
 st.markdown(
@@ -187,7 +138,6 @@ if option == "ESG Data Generation":
                     #csv_data = csv_buffer.getvalue().encode('utf-8')
                     #st.download_button("Download CSV", csv_data, "Generated_data.csv", "text/csv")
                 
-
     elif sample == "No":
         tech = st.selectbox("Choose the Industry", ("Vehicle Manufacturing", "Finance", "Healthcare", "Technology", "Other"))
         data = st.text_input("What type of data to be generated: ESG Scope 1, ESG Scope 2, ESG Scope 3", placeholder="ESG")
