@@ -1,9 +1,6 @@
 streamlit
 pandas
-google-generativeai
 python-dotenv
-langchain
-langchain_google_genai
 sdv
 seaborn
 matplotlib
